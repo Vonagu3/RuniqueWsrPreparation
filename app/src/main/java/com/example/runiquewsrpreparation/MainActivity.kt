@@ -23,7 +23,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             RuniqueWsrPreparationTheme {
                 val navController = rememberNavController()
-                NavigationRoot()
+                NavigationRoot(
+                    navController = navController,
+                    isLoggedIn = true
+                )
             }
         }
     }
