@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavigationRoot(
                     navController = navController,
-                    isLoggedIn = true
+                    isLoggedIn = false
                 )
             }
         }

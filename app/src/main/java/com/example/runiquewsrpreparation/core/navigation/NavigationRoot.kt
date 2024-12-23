@@ -41,7 +41,7 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
 
 private fun NavGraphBuilder.runGraph(navController: NavHostController) {
     navigation<RunGraph>(
-        startDestination = RunGraph
+        startDestination = RunOverview
     ) {
         composable<RunOverview> {  }
         composable<RunActive> {  }
