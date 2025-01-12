@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,6 +23,7 @@ import com.example.runiquewsrpreparation.R
 import com.example.runiquewsrpreparation.core.presentation.designsystem.component.GradientBackground
 import com.example.runiquewsrpreparation.core.presentation.designsystem.component.RuniqueActionButton
 import com.example.runiquewsrpreparation.core.presentation.designsystem.component.RuniqueOutlinedActionButton
+import com.example.runiquewsrpreparation.core.presentation.designsystem.component.RuniqueTextField
 import com.example.runiquewsrpreparation.ui.theme.LogoIcon
 import com.example.runiquewsrpreparation.ui.theme.RuniqueWsrPreparationTheme
 
@@ -59,6 +62,7 @@ fun IntroScreen(
                 .padding(16.dp)
                 .padding(bottom = 48.dp)
         ) {
+            RuniqueTextField(state = rememberTextFieldState())
             Text(
                 text = stringResource(id = R.string.welcome_to_runique),
                 color = MaterialTheme.colorScheme.onBackground,
