@@ -13,9 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicSecureTextField
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -42,157 +40,87 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.runiquewsrpreparation.ui.theme.CheckIcon
 import com.example.runiquewsrpreparation.ui.theme.EmailIcon
-import com.example.runiquewsrpreparation.ui.theme.EyeClosedIcon
-import com.example.runiquewsrpreparation.ui.theme.EyeOpenedIcon
 import com.example.runiquewsrpreparation.ui.theme.RuniqueWsrPreparationTheme
+
 
 @Composable
 fun RuniqueTextField(
     state: TextFieldState,
-    startIcon: ImageVector? = null,
-    endIcon: ImageVector? = null,
     hint: String,
     modifier: Modifier = Modifier,
-    title: String? = null,
-    additionalInfo: String? = null,
-    keyboardType: KeyboardType = KeyboardType.Text
-) {
-    RuniqueTextFieldInner(
-        state,
-        startIcon,
-        endIcon,
-        hint,
-        modifier,
-        title,
-        additionalInfo,
-        keyboardType,
-    )
-}
-
-@Composable
-private fun RuniqueTextFieldInner(
-    state: TextFieldState,
     startIcon: ImageVector? = null,
-    endIcon: ImageVector? = null,
-    hint: String,
-    modifier: Modifier = Modifier,
+    firstEndIcon: ImageVector? = null,
+    secondEndIcon: ImageVector? = null,
     title: String? = null,
     additionalInfo: String? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
+    getTextObfuscationMode: (Boolean) -> TextObfuscationMode = { TextObfuscationMode.Visible },
+    onClick: (Boolean) -> Boolean
 ) {
-    var isFocused by remember { mutableStateOf(false) }
     Column(
         modifier = modifier
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            title?.let {
-                Text(
-                    text = it,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            additionalInfo?.let {
-                Text(
-                    text = it,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 12.sp
-                )
-            }
-        }
+        RoniqueTextInfo(title, additionalInfo)
         Spacer(modifier = Modifier.height(4.dp))
-        BasicSecureTextField(
-            textObfuscationCharacter = TextObfuscationMode.Visible
-        )
-        BasicTextField(
-            state = state,
-            textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onBackground),
-            modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
-                .background(
-                    if (isFocused) {
-                        MaterialTheme.colorScheme.primary.copy(alpha = 0.05f)
-                    } else {
-                        MaterialTheme.colorScheme.surface
-                    }
-                )
-                .border(
-                    width = 1.dp,
-                    color = if (isFocused)
-                        MaterialTheme.colorScheme.primary
-                    else
-                        Color.Transparent
-                )
-                .padding(12.dp)
-                .onFocusChanged {
-                    isFocused = it.isFocused
-                },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = keyboardType
-            ),
-            lineLimits = TextFieldLineLimits.SingleLine,
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.onBackground),
-            decorator = { innerBox ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    startIcon?.let {
-                        Icon(
-                            imageVector = it,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Spacer(modifier = Modifier.width(16.dp))
-                    }
-                    Box(modifier = Modifier.weight(1f)) {
-                        if (state.text.isEmpty() && !isFocused) {
-                            Text(
-                                text = hint,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-                        innerBox()
-                    }
-                    endIcon?.let {
-                        Spacer(modifier = Modifier.width(16.dp))
-                        IconButton(
-                            onClick = {
-
-                            },
-                            content = {
-                                Icon(
-                                    imageVector = if (isPasswordVisible) {
-                                        EyeOpenedIcon
-                                    } else {
-                                        EyeClosedIcon
-                                    },
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            },
-                        )
-                    }
-
-                }
-            }
+        RoniqueSecureTextField(
+            state = state,startIcon = startIcon,
+            firstEndIcon = firstEndIcon,
+            secondEndIcon = secondEndIcon,
+            hint = hint,
+            keyboardType = keyboardType,
+            getTextObfuscationMode = getTextObfuscationMode,
+            onClick = onClick,
         )
     }
 }
 
-enum class TextType {
-    BASIC,
-    PASSWORD
-}
 
 @Composable
-private fun BasicTextField() {
-    BasicTextField(
+private fun RoniqueTextInfo(
+    title: String?,
+    additionalInfo: String?,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        title?.let {
+            Text(
+                text = it,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        additionalInfo?.let {
+            Text(
+                text = it,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 12.sp
+            )
+        }
+    }
+}
+
+
+@Composable
+private fun RoniqueSecureTextField(
+    state: TextFieldState,
+    startIcon: ImageVector? = null,
+    firstEndIcon: ImageVector? = null,
+    secondEndIcon: ImageVector? = null,
+    hint: String,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    getTextObfuscationMode: (Boolean) -> TextObfuscationMode = { TextObfuscationMode.Visible },
+    onClick: (Boolean) -> Boolean
+) {
+    var isFocused by remember { mutableStateOf(false) }
+    var changeEndIconCondition by remember { mutableStateOf(true) }
+
+    val click = { changeEndIconCondition = onClick(changeEndIconCondition) }
+
+    BasicSecureTextField(
         state = state,
+        textObfuscationMode = getTextObfuscationMode(changeEndIconCondition),
         textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onBackground),
         modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
@@ -217,7 +145,6 @@ private fun BasicTextField() {
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType
         ),
-        lineLimits = TextFieldLineLimits.SingleLine,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.onBackground),
         decorator = { innerBox ->
             Row(
@@ -242,19 +169,37 @@ private fun BasicTextField() {
                     }
                     innerBox()
                 }
-                endIcon?.let {
+                firstEndIcon?.let {
                     Spacer(modifier = Modifier.width(16.dp))
-                    Icon(
-                        imageVector = it,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    if (secondEndIcon !== null) {
+                        IconButton(
+                            onClick = click,
+                            content = {
+                                Icon(
+                                    imageVector = if (changeEndIconCondition) firstEndIcon else secondEndIcon,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            },
+                        )
+                    } else {
+                        IconButton(
+                            onClick = click,
+                            content = {
+                                Icon(
+                                    imageVector = firstEndIcon,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            },
+                        )
+                    }
                 }
-
             }
         }
     )
 }
+
 
 @Preview
 @Composable
@@ -263,10 +208,11 @@ private fun RuniqueTextFieldPreview() {
         RuniqueTextField(
             state = rememberTextFieldState(),
             startIcon = EmailIcon,
-            endIcon = CheckIcon,
+            firstEndIcon = CheckIcon,
             hint = "example@test.com",
             title = "Email",
             additionalInfo = "Must be a valid email",
+            onClick = { true },
             modifier = Modifier
                 .fillMaxWidth()
         )
