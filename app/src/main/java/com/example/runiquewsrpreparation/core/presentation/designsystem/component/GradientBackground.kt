@@ -2,12 +2,14 @@ package com.example.runiquewsrpreparation.core.presentation.designsystem.compone
 
 import android.os.Build
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.geometry.Offset
@@ -21,7 +23,9 @@ import com.example.runiquewsrpreparation.ui.theme.RuniqueWsrPreparationTheme
 @Composable
 fun GradientBackground(
     modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
@@ -72,7 +76,9 @@ fun GradientBackground(
                 )
         )
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = horizontalAlignment,
+            verticalArrangement = verticalArrangement
         ) {
             content()
         }

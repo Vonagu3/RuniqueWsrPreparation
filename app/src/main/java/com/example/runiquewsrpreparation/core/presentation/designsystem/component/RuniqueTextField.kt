@@ -49,13 +49,12 @@ fun RuniqueTextField(
     hint: String,
     modifier: Modifier = Modifier,
     startIcon: ImageVector? = null,
-    firstEndIcon: ImageVector? = null,
-    secondEndIcon: ImageVector? = null,
+    icon: ImageVector? = null,
     title: String? = null,
     additionalInfo: String? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
-    getTextObfuscationMode: (Boolean) -> TextObfuscationMode = { TextObfuscationMode.Visible },
-    onClick: (Boolean) -> Boolean
+    visibleTextObfuscationMode: Boolean = true,
+    onClick: (() -> Unit)? = null,
 ) {
     Column(
         modifier = modifier
@@ -64,11 +63,10 @@ fun RuniqueTextField(
         Spacer(modifier = Modifier.height(4.dp))
         RoniqueSecureTextField(
             state = state,startIcon = startIcon,
-            firstEndIcon = firstEndIcon,
-            secondEndIcon = secondEndIcon,
+            icon = icon,
             hint = hint,
             keyboardType = keyboardType,
-            getTextObfuscationMode = getTextObfuscationMode,
+            visibleTextObfuscationMode = visibleTextObfuscationMode,
             onClick = onClick,
         )
     }
@@ -105,22 +103,19 @@ private fun RoniqueTextInfo(
 @Composable
 private fun RoniqueSecureTextField(
     state: TextFieldState,
-    startIcon: ImageVector? = null,
-    firstEndIcon: ImageVector? = null,
-    secondEndIcon: ImageVector? = null,
     hint: String,
+    startIcon: ImageVector? = null,
+    icon: ImageVector? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
-    getTextObfuscationMode: (Boolean) -> TextObfuscationMode = { TextObfuscationMode.Visible },
-    onClick: (Boolean) -> Boolean
+    visibleTextObfuscationMode: Boolean = true,
+    onClick: (() -> Unit)? = null,
 ) {
     var isFocused by remember { mutableStateOf(false) }
-    var changeEndIconCondition by remember { mutableStateOf(true) }
-
-    val click = { changeEndIconCondition = onClick(changeEndIconCondition) }
+    val textObfuscationMode = if (visibleTextObfuscationMode) TextObfuscationMode.Visible else TextObfuscationMode.Hidden
 
     BasicSecureTextField(
         state = state,
-        textObfuscationMode = getTextObfuscationMode(changeEndIconCondition),
+        textObfuscationMode = textObfuscationMode,
         textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onBackground),
         modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
@@ -169,35 +164,41 @@ private fun RoniqueSecureTextField(
                     }
                     innerBox()
                 }
-                firstEndIcon?.let {
+                icon?.let {
                     Spacer(modifier = Modifier.width(16.dp))
-                    if (secondEndIcon !== null) {
-                        IconButton(
-                            onClick = click,
-                            content = {
-                                Icon(
-                                    imageVector = if (changeEndIconCondition) firstEndIcon else secondEndIcon,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            },
-                        )
-                    } else {
-                        IconButton(
-                            onClick = click,
-                            content = {
-                                Icon(
-                                    imageVector = firstEndIcon,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            },
-                        )
-                    }
+                    GetIcon(icon, onClick, tint = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         }
     )
+}
+
+
+@Composable
+private fun GetIcon(
+    icon: ImageVector,
+    onClick: (() -> Unit)? = null,
+    contentDescription: String? = null,
+    tint: Color,
+) {
+    if (onClick !== null) {
+        IconButton(
+            onClick = onClick,
+            content = {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = contentDescription,
+                    tint = tint
+                )
+            },
+        )
+    } else {
+        Icon(
+            imageVector = icon,
+            contentDescription = contentDescription,
+            tint = tint
+        )
+    }
 }
 
 
@@ -208,11 +209,10 @@ private fun RuniqueTextFieldPreview() {
         RuniqueTextField(
             state = rememberTextFieldState(),
             startIcon = EmailIcon,
-            firstEndIcon = CheckIcon,
+            icon = CheckIcon,
             hint = "example@test.com",
             title = "Email",
             additionalInfo = "Must be a valid email",
-            onClick = { true },
             modifier = Modifier
                 .fillMaxWidth()
         )

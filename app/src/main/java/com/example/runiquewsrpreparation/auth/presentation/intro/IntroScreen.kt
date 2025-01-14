@@ -62,7 +62,6 @@ fun IntroScreen(
                 .padding(16.dp)
                 .padding(bottom = 48.dp)
         ) {
-            RuniqueTextField(state = rememberTextFieldState())
             Text(
                 text = stringResource(id = R.string.welcome_to_runique),
                 color = MaterialTheme.colorScheme.onBackground,

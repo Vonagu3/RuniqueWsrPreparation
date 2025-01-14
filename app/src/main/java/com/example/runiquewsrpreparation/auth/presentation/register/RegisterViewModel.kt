@@ -6,12 +6,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.runiquewsrpreparation.auth.domain.PasswordValiationState
 import com.example.runiquewsrpreparation.auth.domain.UserDataValidator
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
-class RegisterViewModel constructor(
+@HiltViewModel
+class RegisterViewModel @Inject constructor(
     private val userDataValidator: UserDataValidator
 ): ViewModel() {
 

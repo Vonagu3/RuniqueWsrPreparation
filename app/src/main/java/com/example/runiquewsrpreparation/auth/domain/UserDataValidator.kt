@@ -1,8 +1,9 @@
 package com.example.runiquewsrpreparation.auth.domain
 
-import androidx.compose.foundation.text.input.TextFieldState
 
-class UserDataValidator {
+class UserDataValidator(
+    private val patternValidator: PatternValidator
+) {
 
     fun validatePassword(password: String): PasswordValiationState {
         val hasMinLength = password.length >= MIN_PASSWORD_LENGTH
@@ -18,9 +19,7 @@ class UserDataValidator {
         )
     }
 
-    fun isEmailValid(email: String): Boolean {
-
-    }
+    fun isEmailValid(email: String): Boolean = patternValidator.matches(email.trim())
 
     companion object {
         const val MIN_PASSWORD_LENGTH = 9

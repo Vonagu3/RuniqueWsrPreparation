@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.runiquewsrpreparation.auth.presentation.intro.IntroScreenRoot
+import com.example.runiquewsrpreparation.auth.presentation.register.RegisterScreenRoot
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -35,7 +36,22 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
             )
         }
         composable<AuthLogin> {  }
-        composable<AuthRegister> {  }
+        composable<AuthRegister> {
+            RegisterScreenRoot(
+                onSignInClick = {
+                    navController.navigate(AuthLogin) {
+                        popUpTo(AuthRegister) {
+                            inclusive = true // false
+                            saveState = true
+                        }
+                        restoreState = true
+                    }
+                },
+                onSuccessfulRegisteration = {
+                    navController.navigate(AuthLogin)
+                }
+            )
+        }
     }
 }
 
