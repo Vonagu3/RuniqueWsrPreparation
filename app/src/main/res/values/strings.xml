@@ -5,4 +5,6 @@
     <string name="runique_description">Track yout runs, set goals and achieve fitness milestones with our intuitive app\n</string>
     <string name="sign_up">Sign up</string>
     <string name="sign_in">Sign in</string>
+    <string name="already_have_an_account">Alread have an account?</string>
+    <string name="login">Login</string>
 </resources>

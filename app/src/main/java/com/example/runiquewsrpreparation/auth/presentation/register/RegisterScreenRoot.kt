@@ -5,14 +5,23 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.withLink
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,6 +35,7 @@ import com.example.runiquewsrpreparation.ui.theme.EmailIcon
 import com.example.runiquewsrpreparation.ui.theme.EyeClosedIcon
 import com.example.runiquewsrpreparation.ui.theme.EyeOpenedIcon
 import com.example.runiquewsrpreparation.ui.theme.LockIcon
+import com.example.runiquewsrpreparation.ui.theme.Poppins
 
 @Composable
 fun RegisterScreenRoot(
@@ -36,7 +46,7 @@ fun RegisterScreenRoot(
     RegisterScreen(
         state = viewModel.state,
         onAction = { action ->
-            when(action) {
+            when (action) {
                 RegisterAction.OnLoginClick -> onSignInClick()
                 else -> viewModel.onAction(action)
             }
@@ -50,7 +60,33 @@ fun RegisterScreen(
     onAction: (RegisterAction) -> Unit
 ) {
     GradientBackground {
-        Text(text = "Welcome to " + stringResource(R.string.runique))
+//        Text(text = "Welcome to " + stringResource(R.string.runique))
+        val annotatedString = buildAnnotatedString {
+            withStyle(
+                style = SpanStyle(
+                    fontFamily = Poppins,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            ) {
+                append(stringResource(R.string.already_have_an_account) + " ")
+                withLink(LinkAnnotation.Clickable(
+                    tag = "clickable_text",
+                    styles = TextLinkStyles(
+                        style = SpanStyle(
+                            fontFamily = Poppins,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    ),
+                    linkInteractionListener = {
+                        onAction(RegisterAction.OnLoginClick)
+                    }
+                )) {
+                    append(stringResource(R.string.login))
+                }
+            }
+        }
+        Text(text = annotatedString)
         Spacer(Modifier.height(16.dp))
 
         RuniqueTextField(
