@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -22,6 +24,11 @@ android {
     }
 
     buildTypes {
+        val apiKey = gradleLocalProperties(project.rootDir, project.providers).getProperty("API_KEY")
+        debug {
+            buildConfigField("String", "BASE_URL", "\"https://runique.pl-coding.com:8080\"")
+            buildConfigField("String", "API_KEY", "\"$apiKey\"")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -39,6 +46,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
