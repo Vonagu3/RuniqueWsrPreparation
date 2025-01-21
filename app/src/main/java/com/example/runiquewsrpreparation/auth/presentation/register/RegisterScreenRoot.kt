@@ -1,5 +1,6 @@
 package com.example.runiquewsrpreparation.auth.presentation.register
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,8 +12,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -24,6 +27,7 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.runiquewsrpreparation.R
 import com.example.runiquewsrpreparation.auth.domain.UserDataValidator
@@ -36,6 +40,8 @@ import com.example.runiquewsrpreparation.ui.theme.EyeClosedIcon
 import com.example.runiquewsrpreparation.ui.theme.EyeOpenedIcon
 import com.example.runiquewsrpreparation.ui.theme.LockIcon
 import com.example.runiquewsrpreparation.ui.theme.Poppins
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun RegisterScreenRoot(
@@ -43,6 +49,23 @@ fun RegisterScreenRoot(
     onSuccessfulRegisteration: () -> Unit,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
+
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collectLatest { event ->
+            when(event) {
+                is RegisterEvent.Error -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                }
+                RegisterEvent.RegistrationSuccess -> {
+                    Toast.makeText(context, R.string.registration_successful, Toast.LENGTH_LONG).show()
+                    delay(2000L)
+                    onSuccessfulRegisteration()
+                }
+            }
+        }
+    }
+
     RegisterScreen(
         state = viewModel.state,
         onAction = { action ->
@@ -148,7 +171,11 @@ private fun PasswordValidator(
             contentDescription = if (isValid) "Valid" else "Not Valid"
         )
         Spacer(Modifier.width(10.dp))
-        Text(text)
+        Text(
+            text = text,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 14.sp
+        )
     }
 }
 
