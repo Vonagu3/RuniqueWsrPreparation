@@ -17,7 +17,7 @@ class SessionStorageImpl(
     override suspend fun get(): AuthInfo? = withContext(dispatcher) {
         val json = sharedPreferences.getString(KEY_AUTH_INFO, null)
         json?.let {
-            Json.decodeFromString<AuthInfo>(it)
+            Json.decodeFromString<AuthInfoSerialazable>(it).toAuthInfo()
         }
     }
 
@@ -28,7 +28,7 @@ class SessionStorageImpl(
                 return@withContext
             }
 
-            val json = Json.encodeToString(info)
+            val json = Json.encodeToString(info.toAuthInfoSerializable())
             sharedPreferences.edit().putString(KEY_AUTH_INFO, json).commit()
         }
     }
